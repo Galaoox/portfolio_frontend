@@ -2,31 +2,22 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { images } from "../../constants";
 import "./About.scss";
-
-const abouts = [
-  {
-    title: "Web Development",
-    description: "I am  a good web developer.",
-    imgUrl: images.about01,
-  },
-  {
-    title: "Frontend Developer",
-    description: "I am  a good web developer.",
-    imgUrl: images.about02,
-  },
-  {
-    title: "Backend Developer",
-    description: "I am  a good web developer.",
-    imgUrl: images.about03,
-  },
-  {
-    title: "MEAN Stack Developer",
-    description: "I am  a good web developer.",
-    imgUrl: images.about04,
-  },
-];
+import { aboutService } from "../../services";
+import { AppWrap } from "../../wrapper";
 
 const About = () => {
+  const [abouts, setAbouts] = useState([]);
+
+  const getData = async () => {
+    const response = await aboutService.getAbouts();
+    setAbouts(response);
+  };
+
+  useEffect(() => {
+    getData();
+    return () => {};
+  }, []);
+
   return (
     <>
       <h2 className="head-text">
@@ -39,7 +30,7 @@ const About = () => {
               whileHover={{ scale: 1.1 }}
               transition={{ duration: 0.6, type: "tween" }}
               className="app__profile-item"
-              key={about.title + index}
+              key={about.title + about.id}
             >
               <img src={about.imgUrl} alt={about.title} />
               <h2 className="bold-text" style={{ marginTop: 20 }}>
@@ -56,4 +47,4 @@ const About = () => {
   );
 };
 
-export default About;
+export default AppWrap(About, "about");
